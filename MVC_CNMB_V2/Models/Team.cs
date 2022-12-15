@@ -18,7 +18,7 @@ public enum TeamType
     SeniorHurling = 7
 }
 
-public class TeamViewModel
+public class Team
 {
     [Required]
 
@@ -28,7 +28,7 @@ public class TeamViewModel
     [Required]
     public TeamType TeamGame { get; set; } //football, hurling etc.
     [Required]
-    public TeacherViewModel? Mentor { get; set; } //can be null
+    public Teacher? Mentor { get; set; } //can be null
                                                     //public int TeacherId { get; set; } //not sure about this
     }
 }

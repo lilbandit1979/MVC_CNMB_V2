@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MVC_CNMB_V2.Models
 {
-public class SchoolViewModel
+public class School
 {
     public int SchoolId { get; set; }
     [Required]
@@ -14,7 +14,7 @@ public class SchoolViewModel
     public string SchoolAddress { get; set; } = "";
     [Required]
     public string SchoolEircode { get; set; } = "";
-    public virtual ICollection<TeacherViewModel>? Teachers { get; set; } //added as post not working
+    public virtual ICollection<Teacher>? Teachers { get; set; } //added as post not working
 
     }
 }

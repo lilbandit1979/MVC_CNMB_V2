@@ -2,7 +2,7 @@
 
 namespace MVC_CNMB_V2.Models
 {
-	public class TeacherViewModel
+	public class Teacher
     {
     [Required]
     public int TeacherId { get; set; }
@@ -14,5 +14,8 @@ namespace MVC_CNMB_V2.Models
     public string TeacherPhone { get; set; } = "";
     [Required]
     public bool IsMainRep { get; set; } = false;
+
+    //foreign key back to school
+    public int SchoolId { get; set; }
     }
 }
