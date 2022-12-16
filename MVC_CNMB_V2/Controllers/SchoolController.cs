@@ -27,8 +27,7 @@ namespace MVC_CNMB_V2.Controllers
                     _schools = readTask.Result;
                 }
                 else  //Error 
-                {
-                    
+                { 
                     _schools = Enumerable.Empty<School>();
                     ModelState.AddModelError(string.Empty, "Error, no school found");
                 }
