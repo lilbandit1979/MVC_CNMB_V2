@@ -1,24 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using MVC_CNMB_V2.Models;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Text;
-using System;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
 
 namespace MVC_CNMB_V2.Controllers
 {
     public class SchoolController : Controller
     {
+        // GET: SchoolController1
         //HTTP Get --all 
-        public ActionResult Index()
+        School school = new School();
+        List<School> _schools = new List<School>();
+
+        public IActionResult Index()
         {
             IEnumerable<School> _schools = null;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:7021/api/"); 
+                client.BaseAddress = new Uri("https://localhost:7021/api/");
                 //http Get
-                var responseTask = client.GetAsync("schools"); 
+                var responseTask = client.GetAsync("schools");
                 responseTask.Wait();
                 var result = responseTask.Result;
                 if (result.IsSuccessStatusCode)
@@ -29,7 +32,7 @@ namespace MVC_CNMB_V2.Controllers
                     _schools = readTask.Result;
                 }
                 else  //Error 
-                { 
+                {
                     _schools = Enumerable.Empty<School>();
                     ModelState.AddModelError(string.Empty, "Error, no schools found");
                 }
@@ -37,129 +40,167 @@ namespace MVC_CNMB_V2.Controllers
             }
         }
 
-        // GET: TestController/Details/5
-        //public ActionResult Details()
+        //[HttpGet]
+        //public async Task<List<School>> GetAllSchools()
         //{
+        //    _schools = new List<School>();
+        //    using (var httpClient = new HttpClient())
+        //    {
+        //        using (var response = await httpClient.GetAsync("https://localhost:7021/api/Schools"))
+        //        {
+        //            string apiResponse = await response.Content.ReadAsStringAsync();
+        //            _schools = JsonConvert.DeserializeObject<List<School>>(apiResponse);
+        //        }
+        //    }
+        //    return _schools;
+        //}
 
+        [HttpGet]
+        public async Task<School> GetSchoolById(int schoolId)
+        {
+            
+            var school = new School();
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync("https://localhost:7021/api/Schools"+schoolId))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    school = JsonConvert.DeserializeObject<School>(apiResponse);
+                }
+            }
+            return school; 
+        }
+
+
+        [HttpPost]
+        public async Task<School> UpdateSchool(School school)
+        {
+
+            var _school = new School();
+            using (var httpClient = new HttpClient())
+            {
+                StringContent content = new StringContent(JsonConvert.SerializeObject(school), Encoding.UTF8, "application.json");
+                
+                using (var response = await httpClient.PostAsync("https://localhost:7021/api/Schools", content))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    school = JsonConvert.DeserializeObject<School>(apiResponse);
+                }
+            }
+            return school;
+        }
+
+        [HttpDelete]
+        public async Task<string> DeleteSchool(int schoolId)
+        {
+            string info = "";
+            
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.DeleteAsync("https://localhost:7021/api/Schools" + schoolId))
+                {
+                    info = await response.Content.ReadAsStringAsync();
+                }
+            }
+            return info;
+        }
+
+        //public ActionResult Index()
+        //{
+        //    {
+        //        School school = new School();
+        //        List<School> _schools = new List<School>();
+        //        using (var client = new HttpClient())
+        //        {
+        //            client.BaseAddress = new Uri("https://localhost:7021/api/");
+        //            //http Get
+        //            var responseTask = client.GetAsync("schools");
+        //            responseTask.Wait();
+        //            var result = responseTask.Result;
+        //            if (result.IsSuccessStatusCode)
+        //            {
+        //                var readTask = result.Content.ReadAsAsync<IList<School>>();
+        //                readTask.Wait();
+
+        //                _schools = readTask.Result;
+        //            }
+        //            else  //Error 
+        //            {
+        //                _schools = Enumerable.Empty<School>();
+        //                ModelState.AddModelError(string.Empty, "Error, no schools found");
+        //            }
+        //            return View(_schools);
+        //        }
+        //    }
+        //}
+
+        //// GET: SchoolController1/Details/5
+        //public ActionResult Details(int id)
+        //{
         //    return View();
         //}
-        public async Task<ActionResult> Details(int id)
-        {
-            string Baseurl = "https://localhost:7021/api/";
-            School SchoolDetails = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(Baseurl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await client.GetAsync("School/GetSchoolById/");
-                if (Res.IsSuccessStatusCode)
-                {
-                    var record = Res.Content.ReadAsStringAsync().Result;
-                    SchoolDetails = JsonConvert.DeserializeObject<School>(record);
-                }
-                return View(SchoolDetails);
-            }
-        }
-    
 
-// GET: SchoolController/Edit/5
-public ActionResult Edit(int id)
-        {
-            return View(id);
-        }
+        //// GET: SchoolController1/Create
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        // POST: TestController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(School school,int id)
-        {
-            List<School> _schools = new List<School>();
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://localhost:7021/api/");
-                //http Get
-                var responseTask = await client.GetAsync("/School/GetSchoolById"); //coud prepend /api/
+        //// POST: SchoolController1/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
-                if (responseTask.IsSuccessStatusCode)
-                {
-                    var found = responseTask.Content.ReadAsStringAsync().Result;
-                    _schools = JsonConvert.DeserializeObject<List<School>>(found);
-                }
-                return View(school);
-            } 
-        }
+        //// GET: SchoolController1/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    return View();
+        //}
 
+        //// POST: SchoolController1/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
-        //Http POST
-        public ActionResult create()
-        {
-            return View();
-        }
-        [HttpPost]
-        public ActionResult createOld(School school)
-        {
-            var json = JsonConvert.SerializeObject(school);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
+        //// GET: SchoolController1/Delete/5
+        //public ActionResult Delete(int id)
+    //    {
+    //        return View();
+    //    }
 
-            using (var client = new HttpClient())
-            {
-                var url = "https://localhost:7021/api/Schools";
-                var response = client.PostAsync(url, data).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("Index");
-                }
-            }
-            ModelState.AddModelError(string.Empty, "Error");
-
-            return View(school);
-        }
-        [HttpPost] //used async
-        public async Task<ActionResult> create(School school)
-        {
-            var json = JsonConvert.SerializeObject(school);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
-
-
-            using (var client = new HttpClient())
-            {
-                var url = "https://localhost:7021/api/Schools";
-                var response = await client.PostAsync(url, data);
-                //var result1 = response.Content.ReadAsStringAsync().Result;
-                //client.PutAsJsonAsync(url, data); --put method in here
-                if (response.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("Index");
-                }
-            }
-
-            ModelState.AddModelError(string.Empty, "Error");
-
-            return View(school);
-        }
-
-        [HttpPut] //not working yet ----------->> comback to this tomorrow
-        [Route("/api/School/EditSchool")]
-        public async Task<ActionResult> edit(School school)
-        {
-            var json = JsonConvert.SerializeObject(school);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
-
-            using (var client = new HttpClient())
-            {
-                var url = "https://localhost:7021/api/Schools";
-                var response = await client.PutAsync(url, data);
-                //var result1 = response.Content.ReadAsStringAsync().Result;
-                //client.PutAsJsonAsync(url, data); --put method in here
-                if (response.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("Index");
-                }
-            }
-            ModelState.AddModelError(string.Empty, "Error");
-
-            return View(school);
-        }
+    //    // POST: SchoolController1/Delete/5
+    //    [HttpPost]
+    //    [ValidateAntiForgeryToken]
+    //    public ActionResult Delete(int id, IFormCollection collection)
+    //    {
+    //        try
+    //        {
+    //            return RedirectToAction(nameof(Index));
+    //        }
+    //        catch
+    //        {
+    //            return View();
+    //        }
+    //    }
     }
 }

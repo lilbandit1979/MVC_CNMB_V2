@@ -1,45 +1,59 @@
 ﻿@model IEnumerable<MVC_CNMB_V2.Models.School>
 
 @{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h1>Index</h1>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @*@Html.DisplayNameFor(model => model.FirstName)*@
-            @Html.DisplayNameFor(model => model.SchoolName)
-        </th>
-        <th>
-            @*@Html.DisplayNameFor(model => model.LastName)*@
-            @Html.DisplayNameFor(model => model.SchoolAddress)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SchoolId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SchoolName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SchoolPhone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SchoolAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SchoolEircode)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
         <tr>
             <td>
-                @*@Html.DisplayFor(modelItem => item.FirstName)*@
+                @Html.DisplayFor(modelItem => item.SchoolId)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.SchoolName)
             </td>
             <td>
-                @*@Html.DisplayFor(modelItem => item.LastName)*@
+                @Html.DisplayFor(modelItem => item.SchoolPhone)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.SchoolAddress)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.SchoolId }) |
+                @Html.DisplayFor(modelItem => item.SchoolEircode)
+            </td>
+            <td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.SchoolId}) |
                 @Html.ActionLink("Details", "Details", new { id=item.SchoolId }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.SchoolId })
+                    @Html.ActionLink("Delete", "Delete", new {id=item.SchoolId })
             </td>
         </tr>
-    }
-
+}
+    </tbody>
 </table>
