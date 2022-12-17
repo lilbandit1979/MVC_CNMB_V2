@@ -56,13 +56,13 @@ namespace MVC_CNMB_V2.Controllers
         //}
 
         [HttpGet]
-        public async Task<School> GetSchoolById(int schoolId)
+        public async Task<School> GetSchoolById(int Id)
         {
             
             var school = new School();
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync("https://localhost:7021/api/Schools"+schoolId))
+                using (var response = await httpClient.GetAsync("https://localhost:7021/api/Schools"+Id))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     school = JsonConvert.DeserializeObject<School>(apiResponse);
@@ -71,6 +71,35 @@ namespace MVC_CNMB_V2.Controllers
             return school; 
         }
 
+        // GET: TeamController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost] //used async
+        public async Task<ActionResult> create(School school)
+        {
+            var json = JsonConvert.SerializeObject(school);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+            using (var client = new HttpClient())
+            {
+                var url = "https://localhost:7021/api/Schools";
+                var response = await client.PostAsync(url, data);
+                //var result1 = response.Content.ReadAsStringAsync().Result;
+                //client.PutAsJsonAsync(url, data); --put method in here
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+
+            ModelState.AddModelError(string.Empty, "Error");
+
+            return View(school);
+        }
 
         [HttpPost]
         public async Task<School> UpdateSchool(School school)
