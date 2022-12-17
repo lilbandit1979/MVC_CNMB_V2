@@ -51,19 +51,26 @@ namespace MVC_CNMB_V2.Controllers
         // POST: TeamController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Team team)
+        public async Task<ActionResult> Create(Team team)
         {
-            try
-            {
                 var json = JsonConvert.SerializeObject(team);
                 var data = new StringContent(json, Encoding.UTF8, "application/json");
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+
+                using (var client=new HttpClient())
+                {
+                    var url = "https://localhost:7021/api/Teams";
+                    var response =await client.PostAsync(url, data); //added PutAsJsonAsync here instead of PostAsync
+                    if(response.IsSuccessStatusCode)
+                        {
+                            return RedirectToAction("Index");
+                        }
+                }
+
+                ModelState.AddModelError(string.Empty, "Error creating Team");    
+                return View(team);
         }
+       
+        
 
         // GET: TeamController/Edit/5
         public ActionResult Edit(int id)

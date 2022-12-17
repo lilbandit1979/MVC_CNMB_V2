@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MVC_CNMB_V2.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace MVC_CNMB_V2.Models
 {
@@ -21,14 +22,16 @@ public enum TeamType
 public class Team
 {
     [Required]
-
     public int TeamId { get; set; }
     [Required]
     public Gender Gender { get; set; }
     [Required]
     public TeamType TeamGame { get; set; } //football, hurling etc.
     [Required]
-    public Teacher? Mentor { get; set; } //can be null
-                                                    //public int TeacherId { get; set; } //not sure about this
+    //public Teacher? Mentor { get; set; } //can be null //taken out 16th Dec
+    
+    public int SchoolId { get; set; }
+    public int TeacherId { get; set; }
+
     }
 }

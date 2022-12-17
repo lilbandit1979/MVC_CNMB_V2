@@ -1,18 +1,17 @@
 ﻿@model MVC_CNMB_V2.Models.School
 
 @{
-    ViewData["Title"] = "edit";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>edit</h1>
+<h1>Edit</h1>
 
 <h4>School</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="edit">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-           
             <div class="form-group">
                 <label asp-for="SchoolId" class="control-label"></label>
                 <input asp-for="SchoolId" class="form-control" />
