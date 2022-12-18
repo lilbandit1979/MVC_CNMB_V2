@@ -11,7 +11,7 @@ namespace MVC_CNMB_V2.Controllers
         IEnumerable<Teacher> _teachers = new List<Teacher>();
         Teacher teacher = new Teacher();
         // GET: TeacherController
-        public IActionResult Index()
+        public IActionResult Index()  //working
         {
             IEnumerable<Teacher> _teachers = null;
             using (var client = new HttpClient())
@@ -38,41 +38,57 @@ namespace MVC_CNMB_V2.Controllers
 
             }
         }
-
         // GET: TeacherController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public async Task<ActionResult<School>>GetTeacherById(int id)
         {
-            return View();
+            var teacher = new Teacher();
+            using(var httpClient = new HttpClient())
+            {
+                using(var response = await httpClient.GetAsync("https://localhost:7021/api/Teachers/" + id))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    teacher = JsonConvert.DeserializeObject<Teacher>(apiResponse);
+                    
+                }
+            }
+            return View(teacher);
         }
 
-        // GET: TeacherController/Create
+
+        // GET: TestController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: TeacherController/Create
-        [HttpPost] //used async
+
+        // Post: TeacherController/Create
+        [HttpPost]
         public async Task<ActionResult> create(Teacher teacher)
         {
-            var json = JsonConvert.SerializeObject(teacher);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
-
-            using (var client = new HttpClient())
+            if (teacher == null)
             {
-                var url = "https://localhost:7021/api/Teachers";
-                var response = await client.PostAsync(url, data);
-                //var result1 = response.Content.ReadAsStringAsync().Result;
-                //client.PutAsJsonAsync(url, data); --put method in here
-                if (response.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("Index");
-                }
+                return View(teacher);
             }
-
-            ModelState.AddModelError(string.Empty, "Error");
-
-            return View(teacher);
+            else
+            {
+                var json = JsonConvert.SerializeObject(teacher);
+                var data = new StringContent(json, Encoding.UTF8, "application/json");
+                
+                using (var client = new HttpClient())
+                {
+                    var url = "https://localhost:7021/api/Teachers";
+                    var response = await client.PostAsJsonAsync(url, data);
+                    var responseCheck = response.Content.ReadAsStringAsync().Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
+                ModelState.AddModelError(string.Empty, "Error");
+                return View(teacher);
+            }
         }
 
         // GET: TeacherController/Edit/5
@@ -81,20 +97,20 @@ namespace MVC_CNMB_V2.Controllers
             return View();
         }
 
-        // POST: TeacherController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //// POST: TeacherController/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         // GET: TeacherController/Delete/5
         public ActionResult Delete(int id)

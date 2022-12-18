@@ -22,28 +22,7 @@ namespace MVC_CNMB_V2.Controllers
 
             var result = GetAllSchools().Result;
             return View(result);
-            //IEnumerable<School> _schools = null;
-            //using (var client = new HttpClient())
-            //{
-            //    client.BaseAddress = new Uri("https://localhost:7021/api");
-            //    //http Get
-            //    var responseTask = client.GetAsync("schools");
-            //    responseTask.Wait();
-            //    var result = responseTask.Result;
-            //    if (result.IsSuccessStatusCode)
-            //    {
-            //        var readTask = result.Content.ReadAsAsync<IList<School>>();
-            //        readTask.Wait();
-
-            //        _schools = readTask.Result;
-            //    }
-            //    else  //Error 
-            //    {
-            //        _schools = Enumerable.Empty<School>();
-            //        ModelState.AddModelError(string.Empty, "Error, no schools found");
-            //    }
-            //    return View(_schools);
-            //}
+           
         }
 
         
@@ -76,6 +55,11 @@ namespace MVC_CNMB_V2.Controllers
             return View(school); 
         }
 
+        public ActionResult Create()
+        {
+            return View();
+        }
+
         [HttpPost] //used async
         public async Task<ActionResult> create(School school)
         {
@@ -104,24 +88,7 @@ namespace MVC_CNMB_V2.Controllers
 
                 return View(school);
             }
-            //var json = JsonConvert.SerializeObject(school);
-            //var data = new StringContent(json, Encoding.UTF8, "application/json");
-
-            //using (var client = new HttpClient())
-            //{
-            //    var url = "https://localhost:7021/api/Schools";
-            //    var response = await client.PostAsync(url, data);
-            //    var result1 = response.Content.ReadAsStringAsync().Result;
-               
-            //    if (response.IsSuccessStatusCode)
-            //    {
-            //        return RedirectToAction("Index");
-            //    }
-            //}
-
-            //ModelState.AddModelError(string.Empty, "Error");
-
-            //return View(school);
+           
         }
         public async Task<IActionResult> Edit(int id)
         {
@@ -175,26 +142,6 @@ namespace MVC_CNMB_V2.Controllers
             }
         }
 
-            //[HttpPost]
-            //public async Task<ActionResult<School>> EditConfirmed(int id, [Bind("SchoolId","SchoolName","SchoolPhone","SchoolAddress","SchoolEircode")]    School school)
-            //{
-
-            //   var editSchool = new School();
-            //    using (var httpClient = new HttpClient())
-            //    {
-            //        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //        var testJson = JsonConvert.SerializeObject(school);
-            //        StringContent content = new StringContent(testJson);
-
-            //        using (var response = await httpClient.PutAsync($"https://localhost:7021/api/Schools/", content))
-            //        {
-            //            string apiResponse = await response.Content.ReadAsStringAsync();
-            //            editSchool = JsonConvert.DeserializeObject<School>(apiResponse);
-            //        }
-            //    }
-            //    return View(editSchool);
-            //}
-
             public async Task<IActionResult> Delete(int id)
         {
             if(id == 0)
@@ -235,103 +182,5 @@ namespace MVC_CNMB_V2.Controllers
             }
             return NotFound();
         }
-
-        //public ActionResult Index()
-        //{
-        //    {
-        //        School school = new School();
-        //        List<School> _schools = new List<School>();
-        //        using (var client = new HttpClient())
-        //        {
-        //            client.BaseAddress = new Uri("https://localhost:7021/api/");
-        //            //http Get
-        //            var responseTask = client.GetAsync("schools");
-        //            responseTask.Wait();
-        //            var result = responseTask.Result;
-        //            if (result.IsSuccessStatusCode)
-        //            {
-        //                var readTask = result.Content.ReadAsAsync<IList<School>>();
-        //                readTask.Wait();
-
-        //                _schools = readTask.Result;
-        //            }
-        //            else  //Error 
-        //            {
-        //                _schools = Enumerable.Empty<School>();
-        //                ModelState.AddModelError(string.Empty, "Error, no schools found");
-        //            }
-        //            return View(_schools);
-        //        }
-        //    }
-        //}
-
-        //// GET: SchoolController1/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
-
-        //// GET: SchoolController1/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //// POST: SchoolController1/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: SchoolController1/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: SchoolController1/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: SchoolController1/Delete/5
-        //public ActionResult Delete(int id)
-    //    {
-    //        return View();
-    //    }
-
-    //    // POST: SchoolController1/Delete/5
-    //    [HttpPost]
-    //    [ValidateAntiForgeryToken]
-    //    public ActionResult Delete(int id, IFormCollection collection)
-    //    {
-    //        try
-    //        {
-    //            return RedirectToAction(nameof(Index));
-    //        }
-    //        catch
-    //        {
-    //            return View();
-    //        }
-    //    }
     }
 }
