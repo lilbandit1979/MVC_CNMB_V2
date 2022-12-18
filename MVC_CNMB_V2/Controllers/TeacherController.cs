@@ -8,15 +8,17 @@ namespace MVC_CNMB_V2.Controllers
 {
     public class TeacherController : Controller
     {
+        IEnumerable<Teacher> _teachers = new List<Teacher>();
+        Teacher teacher = new Teacher();
         // GET: TeacherController
-        public ActionResult Index()
+        public IActionResult Index()
         {
             IEnumerable<Teacher> _teachers = null;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7021/api/");
                 //http Get
-                var responseTask = client.GetAsync("teachers"); 
+                var responseTask = client.GetAsync("Teachers"); 
                 responseTask.Wait();
                 var result = responseTask.Result;
                 if (result.IsSuccessStatusCode)

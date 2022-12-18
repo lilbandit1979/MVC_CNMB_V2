@@ -1,11 +1,12 @@
 ﻿@model MVC_CNMB_V2.Models.School
 
 @{
-    ViewData["Title"] = "GetSchoolById";
+    ViewData["Title"] = "Delete";
 }
 
-<h1>GetSchoolById</h1>
+<h1>Delete</h1>
 
+<h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>School</h4>
     <hr />
@@ -41,9 +42,10 @@
             @Html.DisplayFor(model => model.SchoolEircode)
         </dd>
     </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "GetSchoolById", new {  id = Model.SchoolId  }) |
     
-    <a asp-action="Index">Back to List</a>
+    <form asp-action="DeleteConfirm">
+        <input type="submit" value="DeleteConfirm" class="btn btn-danger" /> |
+        <input type ="hidden" name="id" value="@Model.SchoolId" />
+        <a asp-action="Index">Back to List</a>
+    </form>
 </div>
